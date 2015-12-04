@@ -3,8 +3,10 @@ package com.soldiersofmobile.atmlocator.db;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
+import java.io.Serializable;
+
 @DatabaseTable(tableName = "bank")
-public class Bank {
+public class Bank implements Serializable {
 
     public static class Columns {
         public static final String NAME = "name";
@@ -38,5 +40,10 @@ public class Bank {
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    @Override
+    public String toString() {
+        return name;
     }
 }

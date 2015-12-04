@@ -3,8 +3,10 @@ package com.soldiersofmobile.atmlocator.db;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
+import java.io.Serializable;
+
 @DatabaseTable(tableName = "atm")
-public class Atm {
+public class Atm implements Serializable {
 
     @DatabaseField(columnName = Columns.ID, generatedId = true)
     private long id;
@@ -14,7 +16,7 @@ public class Atm {
     private double longitude;
     @DatabaseField(columnName = Columns.ADDRESS, canBeNull = false)
     private String address;
-    @DatabaseField(columnName = Columns.BANK, foreign = true)
+    @DatabaseField(columnName = Columns.BANK, foreign = true, foreignAutoRefresh = true)
     private Bank bank;
 
     public long getId() {
@@ -47,6 +49,14 @@ public class Atm {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public Bank getBank() {
+        return bank;
+    }
+
+    public void setBank(Bank bank) {
+        this.bank = bank;
     }
 
     public class Columns {

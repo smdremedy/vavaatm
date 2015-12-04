@@ -32,6 +32,8 @@ public class DbHelper extends OrmLiteSqliteOpenHelper {
             bankDao.create(new Bank("Millenium", "500 600 701"));
             bankDao.create(new Bank("ING Bank", "500 600 702"));
             bankDao.create(new Bank("IDEA Bank", "500 600 703"));
+            bankDao.create(new Bank("PKO SA", "500 600 704"));
+
 
         } catch (SQLException e) {
             e.printStackTrace();

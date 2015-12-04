@@ -13,9 +13,17 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.j256.ormlite.dao.Dao;
+import com.soldiersofmobile.atmlocator.db.Atm;
+import com.soldiersofmobile.atmlocator.db.Bank;
+import com.soldiersofmobile.atmlocator.db.DbHelper;
+
+import java.sql.SQLException;
+import java.util.List;
 
 public class ATMMapActivity extends AppCompatActivity implements OnMapReadyCallback {
 
+    public static final int REQUEST_CODE = 123;
     private GoogleMap mMap;
 
     @Override
@@ -42,11 +50,7 @@ public class ATMMapActivity extends AppCompatActivity implements OnMapReadyCallb
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-        // Add a marker in Sydney and move the camera
-        LatLng sydney = new LatLng(-34, 151);
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
 
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(sydney, 4));
     }
 
     @Override
@@ -60,10 +64,45 @@ public class ATMMapActivity extends AppCompatActivity implements OnMapReadyCallb
 
         if(item.getItemId() == R.id.action_add) {
             Intent intent = new Intent(this, AddAtmActivity.class);
-            startActivity(intent);
+            startActivityForResult(intent, REQUEST_CODE);
             return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == REQUEST_CODE && resultCode == RESULT_OK) {
+            refreshAtms();
+        }
+    }
+
+    private void refreshAtms() {
+        DbHelper dbHelper = new DbHelper(this);
+        try {
+            Dao<Atm, Long> atmDao = dbHelper.getDao(Atm.class);
+            Dao<Bank, String> bankDao = dbHelper.getDao(Bank.class);
+            List<Atm> atms = atmDao.queryForAll();
+            for (Atm atm : atms) {
+
+                LatLng atmLatLong = new LatLng(atm.getLatitude(), atm.getLongitude());
+
+                //bankDao.refresh(atm.getBank());
+
+                mMap.addMarker(new MarkerOptions()
+                        .position(atmLatLong)
+                        .title(atm.getBank().getName())
+                        .snippet(atm.getBank().getPhone()));
+
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(atmLatLong, 10));
+            }
+
+
+        } catch (SQLException e) {
+
+
+        }
     }
 }
