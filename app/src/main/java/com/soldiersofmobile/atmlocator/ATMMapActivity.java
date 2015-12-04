@@ -15,6 +15,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.j256.ormlite.dao.Dao;
 import com.soldiersofmobile.atmlocator.db.Atm;
+import com.soldiersofmobile.atmlocator.db.AtmDao;
 import com.soldiersofmobile.atmlocator.db.Bank;
 import com.soldiersofmobile.atmlocator.db.DbHelper;
 
@@ -34,6 +35,8 @@ public class ATMMapActivity extends AppCompatActivity implements OnMapReadyCallb
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+
     }
 
 
@@ -49,6 +52,9 @@ public class ATMMapActivity extends AppCompatActivity implements OnMapReadyCallb
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+
+        refreshAtms();
+
 
 
     }
@@ -82,7 +88,8 @@ public class ATMMapActivity extends AppCompatActivity implements OnMapReadyCallb
     private void refreshAtms() {
         DbHelper dbHelper = new DbHelper(this);
         try {
-            Dao<Atm, Long> atmDao = dbHelper.getDao(Atm.class);
+            AtmDao atmDao = dbHelper.getDao(Atm.class);
+
             Dao<Bank, String> bankDao = dbHelper.getDao(Bank.class);
             List<Atm> atms = atmDao.queryForAll();
             for (Atm atm : atms) {

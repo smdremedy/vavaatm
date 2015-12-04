@@ -5,7 +5,7 @@ import com.j256.ormlite.table.DatabaseTable;
 
 import java.io.Serializable;
 
-@DatabaseTable(tableName = "atm")
+@DatabaseTable(tableName = "atm", daoClass = AtmDao.class)
 public class Atm implements Serializable {
 
     @DatabaseField(columnName = Columns.ID, generatedId = true)
