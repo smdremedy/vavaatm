@@ -1,7 +1,11 @@
 package com.soldiersofmobile.atmlocator;
 
+import android.content.Intent;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
+import android.view.MenuItem;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -10,7 +14,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-public class ATMMapActivity extends FragmentActivity implements OnMapReadyCallback {
+public class ATMMapActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
 
@@ -43,6 +47,23 @@ public class ATMMapActivity extends FragmentActivity implements OnMapReadyCallba
         mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
 
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(sydney, 4));
+    }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_atmlocator, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        if(item.getItemId() == R.id.action_add) {
+            Intent intent = new Intent(this, AddAtmActivity.class);
+            startActivity(intent);
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }
